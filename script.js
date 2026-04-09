@@ -1281,17 +1281,22 @@ function renderDropdown(roomId, query, eligibleUsers, existingEmails) {
   });
   
   // 4. 웹훅 설정 로드
-  try {
-    const setRes = await fetch('/api/admin/settings', { headers: {'User-Email': email} });
-    const setData = await setRes.json();
-    if(setData.success && setData.settings) {
-      const aionUrl = document.getElementById('webhookAionUrl');
-      const antiUrl = document.getElementById('webhookAntigravityUrl');
-      if(aionUrl) aionUrl.value = setData.settings['AION_WEBHOOK_URL'] || '';
-      if(antiUrl) antiUrl.value = setData.settings['ANTIGRAVITY_WEBHOOK_URL'] || '';
-      if (typeof window.updateGeneratedPrompt === 'function') window.updateGeneratedPrompt();
-    }
-  } catch(e) { console.error(e); }
+  (async function loadWebhookSettings() {
+    try {
+      const email = getCurrentUserEmail();
+      if(email) {
+        const setRes = await fetch('/api/admin/settings', { headers: {'User-Email': email} });
+        const setData = await setRes.json();
+        if(setData.success && setData.settings) {
+          const aionUrl = document.getElementById('webhookAionUrl');
+          const antiUrl = document.getElementById('webhookAntigravityUrl');
+          if(aionUrl) aionUrl.value = setData.settings['AION_WEBHOOK_URL'] || '';
+          if(antiUrl) antiUrl.value = setData.settings['ANTIGRAVITY_WEBHOOK_URL'] || '';
+          if (typeof window.updateGeneratedPrompt === 'function') window.updateGeneratedPrompt();
+        }
+      }
+    } catch(e) { console.error(e); }
+  })();
 }
 
 window.saveWebhookSettings = async function() {
