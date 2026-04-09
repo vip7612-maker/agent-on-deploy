@@ -2,9 +2,9 @@
   "name": "agent-on",
   "version": "1.0.0",
   "description": "온비서 (Agent On) Backend",
-  "main": "server.js",
+  "main": "api/index.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node api/index.js"
   },
   "type": "module",
   "dependencies": {
